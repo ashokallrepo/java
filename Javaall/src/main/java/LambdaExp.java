@@ -28,16 +28,26 @@ import java.util.List;
 
 public class LambdaExp {
     public static void main(String[] args) {
-        List<String> names = new ArrayList<>();
-        names.add("John");
-        names.add("Alice");
-        names.add("Bob");
-        names.add("Charlie");
+//        List<String> names = new ArrayList<>();
+//        names.add("John");
+//        names.add("Alice");
+//        names.add("Bob");
+//        names.add("Charlie");
+//
+//        // Sorting using a lambda expression
+//        Collections.sort(names, (s1, s2) -> s1.compareTo(s2));
+//
+//        // Printing the sorted list
+//        System.out.println("Sorted names: " + names);
 
-        // Sorting using a lambda expression
-        Collections.sort(names, (s1, s2) -> s1.compareTo(s2));
-
-        // Printing the sorted list
-        System.out.println("Sorted names: " + names);
+        AbcInt ab = (a,b) -> System.out.println(a+b);
+        ab.f1(10,20);
+        ab.f1(40,30);
     }
 }
+
+interface AbcInt //this will consider as FI because it has only one abstract method.
+{
+    public void f1(int a, int b);
+}
+
