@@ -4,42 +4,40 @@ import java.util.List;
 
 public class LambdaExpObjSort {
     public static void main(String[] args) {
-        List<Employee> names = new ArrayList<>();
-        names.add(new Employee("John"));
-        names.add(new Employee("Alice"));
-        names.add(new Employee("Bob"));
-        names.add(new Employee("Charlie"));
+        List<Employee> emps = new ArrayList<>();
+        emps.add(new Employee("John",22));
+        emps.add(new Employee("Alice",21));
+        emps.add(new Employee("Bob",20));
+        emps.add(new Employee("Charlie",24));
 
-        // Sorting using a lambda expression
-        Collections.sort(names, (s1, s2) -> s1.getName().compareTo(s2.getName()));
+        // Sorting using a lambda expression. Using compareTo method of Comparable which is only use for String type
+        Collections.sort(emps, (o1, o2) -> o1.name.compareTo(o2.name));
 
         // Printing the sorted list
-        System.out.println("Sorted names: " + names);
+        System.out.println("Sorted by names: " + emps);
+
+        // Sorting using a lambda expression. Using compare method of Comparator which is only use for String type
+        Collections.sort(emps, (o1, o2) -> o1.age<o2.age ? -1 : o1.age > o2.age ? 1 : 0);
+
+        // Printing the sorted list
+        System.out.println("Sorted by ages: " + emps);
     }
 }
 
 class Employee{
-    private String name;
+     String name;
+     int age;
 
-    public Employee() {
-    }
-
-    public Employee(String name) {
+    public Employee(String name, int age) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        this.age = age;
     }
 
     @Override
     public String toString() {
         return "Employee{" +
                 "name='" + name + '\'' +
+                ", age=" + age +
                 '}';
     }
 }

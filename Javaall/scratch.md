@@ -85,7 +85,7 @@ a -> a * a; //single input parameter, brackets are optional.
 a -> {a * a};//invalid as one statement without return, so cumpolsory no brace.
 
 
-**To invoke Lambda expression: [WITHOUT Functional Interface LAMBDA EXPRESSION CANNOT BE POSSIBLE]** 
+**To invoke Lambda expression: [<font color='red'>WITHOUT Functional Interface LAMBDA EXPRESSION CANNOT BE POSSIBLE</font>]** 
 we have to have **Functional Interface(FI)**. FI is interface which is having SAM (Single Abstract Method). Only one method. </br>
 Few inbuild FI are:</br>
 1. Runnable        --- run()
@@ -220,12 +220,191 @@ class Test
 }
 ```
 
+**Example to pass parameter and return value.** 
+
+```java
+interface AbcInt //this will consider as FI because it has only one abstract method.
+{
+    public int f1(int a, int b);
+}
+class Test
+{
+    public static void main(String[] args){
+        AbcInt ab = (a,b) -> System.out.println(a+b); 
+        System.out.println(ab.f1(10,20));
+    }
+}
+```
+
+_NOTE: Lambda expression never generates any .class file. As per the above example it will creates AbcInt.class and Test.class & Test.java files._ 
 
 
+**Example: Using Runnable interface (FI) without Lambda expression.**
+
+```java
+class TestRunnable implements Runnable {
+    @Override
+    public void run() {
+        for(int i=1; i<=3; i++){
+            System.out.println(i + " Child Thread: ");
+        }
+    }
+}
+
+class LambdaExpRunnable{
+    public static void main(String args[]){
+        TestRunnable tr = new TestRunnable();
+        Thread th = new Thread(tr);
+        th.start();
+        for(int i=1;i<=3;i++){
+            System.out.println(i + " Main Thread");
+        }
+    }
+}
+```
+**Same above example without extra class. Using Runnable interface (FI) implementing Lambda expression.**
+
+```java
+public class LambdaExpRunnable {
+    public static void main(String args[]){
+        Runnable r = () -> {
+            for(int i=1; i<=3; i++){
+                System.out.println(i + " Child Thread: ");
+            }
+        };
+        Thread th = new Thread(r);
+        th.start();
+        for(int i=1;i<=3;i++){
+            System.out.println(i + " Main Thread");
+        }
+    }
+}
+```
+**Same above example with Anonymous Class. Anonymous class implements Runnable interface. Anonymous class is more powerfull than Lambda expression.**
+```java
+public class AnonymusClassWithRunnable {
+    public static void main(String args[]){
+        Runnable r = new Runnable() {   //anonymous class which does not have class name and implemented Runnable interface
+            @Override
+            public void run() {
+                for(int i=1;i<=3;i++){
+                    System.out.println(i + " Child Thread");
+                }
+            }
+        };
+        Thread t = new Thread(r);
+        t.start();
+
+        for(int i=1;i<=3;i++){
+            System.out.println(i + " Main Thread");
+        }
+
+    }
+}
+```
+_NOTE: Anonymous class is not same like Lambda expression. Lambda expression can replace Anonymous class when an Interface is having only one Abstract method (i.e. SAM). But, if Interface is having more than one Abstract method then Lambda expression is not applicable instead we can write Anonymous class. Hence Anonymous class is more powerfull than Lambda expression._  
 
 
+**Example: sorting using Comparator FI without Lambda expression**
 
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
+public class LambdaExpComparator {
+    public static void main(String args[]){
+        List<Integer> al = new ArrayList<>();
+        al.add(2);
+        al.add(1);
+        al.add(0);
+        al.add(3);
+        System.out.println("Before Sort: " + al);
+        Collections.sort(al,new TestComparator());
+        System.out.println("After Sort: " + al);
+
+    }
+}
+
+class TestComparator implements  Comparator<Integer> {
+    @Override
+    public int compare(Integer o1, Integer o2) {
+        return o1<o2 ? -1 : o1>o2 ? 1 : 0;
+    }
+}
+
+```
+
+**Example: sorting using Comparator FI with Lambda expression. Not using any extra class**
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class LambdaExpComparator {
+    public static void main(String args[]){
+        List<Integer> al = new ArrayList<>();
+        al.add(2);
+        al.add(1);
+        al.add(0);
+        al.add(3);
+        System.out.println("Before Sort: " + al);
+        Comparator<Integer> cm = (o1,o2) -> o1<o2 ? -1 : o1>o2 ? 1 : 0;
+        Collections.sort(al,cm);
+        System.out.println("After Sort: " + al);
+    }
+}
+```
+
+**Example: sorting custom object's age with Comparator class and object's name with Comparable class**
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class LambdaExpObjSort {
+    public static void main(String[] args) {
+        List<Employee> emps = new ArrayList<>();
+        emps.add(new Employee("John",22));
+        emps.add(new Employee("Alice",21));
+        emps.add(new Employee("Bob",20));
+        emps.add(new Employee("Charlie",24));
+
+        // Sorting using a lambda expression. Using compareTo method of Comparable which is only use for String type
+        Collections.sort(emps, (o1, o2) -> o1.name.compareTo(o2.name));
+
+        // Printing the sorted list
+        System.out.println("Sorted by names: " + emps);
+
+        // Sorting using a lambda expression. Using compare method of Comparator which is only use for non String type
+        Collections.sort(emps, (o1, o2) -> o1.age<o2.age ? -1 : o1.age > o2.age ? 1 : 0);
+
+        // Printing the sorted list
+        System.out.println("Sorted by age: " + emps);
+    }
+}
+
+class Employee{
+     String name;
+     int age;
+
+    public Employee(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+
+```
 
 **Benefits :**
 1. 	To enable functional progrmming in java
@@ -275,6 +454,53 @@ class Test
 3. We can pass procedure/function as arguments.
 4. Easier to use updated APIs and Libraries like stream api.
 5. Enable support for parallel processing. Utilizing cpu processor capabilities like dual core, octa core etc.
+
+
+# Default Method ----
+Why default method? <br/>
+interface A{ <br/>
+    void f1();<br/>
+    void f2();<br/>
+}<br/>
+class C1 implements A<br/>
+{<br/>
+    void f1(){}<br/>
+    void f2(){}<br/>
+}<br/>
+class C2 implements A<br/>
+{<br/>
+void f1(){}<br/>
+void f2(){}<br/>
+}<br/>
+class C3 implements A<br/>
+{<br/>
+void f1(){}<br/>
+void f2(){}<br/>
+}<br/>
+
+_Now all the above classes C1, C2, C3 has implemented function f1 and f2. Now if we add a new abstract method in interface A then again all the classes need to implement this new method. Which is cumbersome, so default method introduced in java 1.8. This default method is optional for all the classes, means C1, C2, C3 can implement or cannot._
+<br/>interface A{ <br/>
+void f1();<br/>
+void f2();<br/>
+default void f3()<br/>
+    {<br/>
+    }<br/>
+}<br/>
+
+**Restrication in default method :** 
+
+1 - While overriding this method in any class we should not use the keyword 'default' as it is already defined in java for switch case.
+To override default method we have to use 'public' keyword instead of 'default'
+
+<br/>class C3 implements A<br/>
+{<br/>
+    void f1(){}<br/>
+    void f2(){}<br/>
+    default void f3(){} //this is invalid. compiler error. <br/>
+    public void f3(){} //this is valid. no compiler error. <br/>
+}<br/>
+
+2 - We should not define any default method which are a part of Object class like 'hashCode' etc becuase Object class implemented by default by any new class. 
 
 **Difference between Interface with default method and Abstract classes**
 

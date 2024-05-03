@@ -40,9 +40,12 @@ public class LambdaExp {
 //        // Printing the sorted list
 //        System.out.println("Sorted names: " + names);
 
-        AbcInt ab = (a,b) -> System.out.println(a+b);
-        ab.f1(10,20);
-        ab.f1(40,30);
+//        AbcInt ab = (a,b) -> System.out.println(a+b);
+//        ab.f1(10,20);
+//        ab.f1(40,30);
+
+        AbcInt1 ab1 = (a,b) -> a+b;
+        System.out.println(ab1.f1(10,20));
     }
 }
 
@@ -50,4 +53,10 @@ interface AbcInt //this will consider as FI because it has only one abstract met
 {
     public void f1(int a, int b);
 }
+
+interface AbcInt1 //this will consider as FI because it has only one abstract method.
+{
+    public int f1(int a, int b);
+}
+
 
