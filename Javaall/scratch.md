@@ -1,3 +1,7 @@
+Ref: Youtube for Blog in Google Search Engine- https://www.youtube.com/watch?v=RLYxWOBA_Vw&t=506s
+Ref: Youtube for Durga sir class -- https://www.youtube.com/watch?v=Tm2BpKlv1rU&list=PLd3UqWTnYXOlrKZWFTbgguqNRA_uVyeBl&index=1
+
+
 <h1>Java 1.8 [concise code]</h1>
 
 
@@ -456,8 +460,17 @@ class Employee{
 5. Enable support for parallel processing. Utilizing cpu processor capabilities like dual core, octa core etc.
 
 
-# Default Method ----
-Why default method? <br/>
+# Default Method of an Interface----
+
+#### Without effecting implementation classes if we want to add new method to the interface then we should used Default Method.
+
+java version 1.7 : only public abstract methods.<br/>
+java version 1.8 : 1.7v + default methods and static methods<br/>
+java version 1.9 : 1.8v + private methods<br/>
+
+Default Methods are also called Virtual Extension Method and Defender Method.<br/>
+
+**Why default method?** <br/>
 interface A{ <br/>
     void f1();<br/>
     void f2();<br/>
@@ -489,7 +502,7 @@ default void f3()<br/>
 
 **Restrication in default method :** 
 
-1 - While overriding this method in any class we should not use the keyword 'default' as it is already defined in java for switch case.
+**1** - While overriding this method in any class we should not use the keyword 'default' as it is already defined in java for switch case.
 To override default method we have to use 'public' keyword instead of 'default'
 
 <br/>class C3 implements A<br/>
@@ -500,7 +513,7 @@ To override default method we have to use 'public' keyword instead of 'default'
     public void f3(){} //this is valid. no compiler error. <br/>
 }<br/>
 
-2 - We should not define any default method which are a part of Object class like 'hashCode' etc becuase Object class implemented by default by any new class. 
+**2** - We should not define any default method which are a part of Object class like 'hashCode' etc becuase Object class implemented by default by any new class. 
 
 **Difference between Interface with default method and Abstract classes**
 
@@ -513,5 +526,137 @@ To override default method we have to use 'public' keyword instead of 'default'
 | 5   | Inside interface we can’t override object class method                                                  | Inside abstract class we can override object class methods.                                    |
 | 6   | Inside interface every variable is always public, static, and final we cannot declare instance varibale | Inside Abstract class we can declare instance variables, which are required to the child class |
 
-**NOTE**: Interface with default method  is not equals to Abstract class
+**NOTE**: Interface with default method is not equals to Abstract class
+
+**Example 1:** Implemented interface without defining "Default Method"
+```java
+public class DefaultMethodImp implements AbcI{
+    public static void main(String args[]){
+        System.out.println("Main Method");
+    }
+}
+
+interface AbcI
+{
+    default void fun(){
+        System.out.println("Default Method !!");
+    }
+}
+```
+
+**Example 2:** Overriding "Default Method"
+
+```java
+public class DefaultMethodOverrideImp implements XyzI{
+    public static void main(String args[]){
+        System.out.println("Main Method");
+        XyzI o =new DefaultMethodOverrideImp();
+        o.fun();
+    }
+
+    public void fun(){
+        System.out.println("Overriding Default Method");
+    }
+}
+
+interface XyzI
+{
+    default void fun(){
+        System.out.println("Default Method !!");
+    }
+}
+
+```
+
+
+#### Ambiguity or Diamond Access Problem. Multiple Inheritance is not possible---
+**Example 3:** Below example will throw a compiler error, Class cannot extend multiple classes.
+```java
+
+class AbcClz{
+    public void fun(){
+     System.out.println("Abc Class Method");
+    }
+}
+
+class XyzClz{
+    public void fun(){
+        System.out.println("Xyz Class Method");
+    }
+}
+
+public class DiamondAccessProblem extends XyzClz, AbcClz //this is not possible it will show compiler error. Multiple inheritance not possible
+{
+    public static void main(String args[]){
+        System.out.println("Main Method");
+    }
+
+}
+```
+
+**Example 3.1:** Multiple inheritance problem can be resolved by default method.
+
+```java
+interface Int1{
+    default void fun(){
+        System.out.println("Interface 1");
+    }
+}
+interface Int2{
+    default void fun(){
+        System.out.println("Interface 2");
+    }
+}
+
+public class DiamondAccessProblem implements Int1,Int2{
+    @Override
+    public void fun() {
+        Int1.super.fun();
+        Int2.super.fun();
+    }
+    public static void main(String args[]){
+        System.out.println("Main Method");
+        DiamondAccessProblem ob = new DiamondAccessProblem();
+        ob.fun();
+    }
+}
+```
+
+# Static Method of an Interface----
+
+#### If we want to implement a utility class which will contains only Static Method then instead of defining static method within Class we can define the same in Interface---
+
+**Example 1:** Interface having static method. Using these static method without implementing the Interfaces. 
+```java
+
+interface Int4{
+    public static void fun(){
+        System.out.println("Interface 4");
+    }
+}
+
+interface Int5{
+    public static void fun(){
+        System.out.println("Interface 5");
+    }
+}
+
+public class StaticInterface {
+    public static void main(String args[]){
+        Int4.fun();
+        Int5.fun();
+    }
+}
+
+```
+
+**Example 2:** Interface having main static method.
+
+```java
+public class MainStaticInterface {
+    public static void main(String args[]){
+        System.out.println("Main method in Interface");
+    }
+}
+```
 

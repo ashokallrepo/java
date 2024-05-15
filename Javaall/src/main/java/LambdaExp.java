@@ -44,17 +44,19 @@ public class LambdaExp {
 //        ab.f1(10,20);
 //        ab.f1(40,30);
 
-        AbcInt1 ab1 = (a,b) -> a+b;
+//        AbcInt1 ab1 = (a,b) -> { return a+b; };   //with return keyword
+        AbcInt1 ab1 = (a,b) ->  a+b;                //without return keyword
         System.out.println(ab1.f1(10,20));
     }
 }
 
+@FunctionalInterface
 interface AbcInt //this will consider as FI because it has only one abstract method.
 {
     public void f1(int a, int b);
 }
 
-interface AbcInt1 //this will consider as FI because it has only one abstract method.
+interface AbcInt1 //This will be considered a functional interface because it contains only one abstract method.
 {
     public int f1(int a, int b);
 }
