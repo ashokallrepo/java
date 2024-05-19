@@ -441,9 +441,6 @@ class Employee{
 | 9     | Memory will be allocated on demand whenever, we are  creating object.                                            | Lambda expression will reside in permanent memory of JVM (method Area)                                                         |
 
 
-
-
-
 **Simple Example** ---<br/>
 //value ‘hello’ assinging to s variable.<br/>
 `String s = “hello”;`<br/>
@@ -569,7 +566,7 @@ interface XyzI
 ```
 
 
-#### Ambiguity or Diamond Access Problem. Multiple Inheritance is not possible---
+#### Ambiguity or Diamond Access Problem. Multiple Inheritance is not poissble---
 **Example 3:** Below example will throw a compiler error, Class cannot extend multiple classes.
 ```java
 
@@ -660,3 +657,450 @@ public class MainStaticInterface {
 }
 ```
 
+# Predefined Functional Interfaces----
+
+**_Package: java.util.function_**
+
+Predicate<br/>
+Function<br/>
+Consumer<br/>
+Suppiler<br/>
+
+**Two argument Predefined Functional Interfaces**
+
+BiPredicate<br/>
+BiFunction<br/>
+BiConsumer<br/>
+
+**Primitive Predefined Functional Interfaces**
+
+IntPredicate<br/>
+IntFunction<br/>
+IntConsumer<br/>
+...
+
+### Predicate Functional Interface. Predicate mostly used when we check condition and return boolean.
+
+```java
+interface Predicate<T>
+{
+    public boolean test(T t);
+}
+```
+**Example 1:** Condition check with custom function
+```java
+public class PredicateExample {
+    //Custom function return true or false based on condition.
+    public static boolean customTest(Integer t){
+        if(t%2 == 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public static void main(String args[]){
+        //calling custom function
+        System.out.println(customTest(10));
+    }
+}
+```
+**Example 1.1:** Same above functionality with Lambda Expression and Predicate Functional Interface
+```java
+import java.util.function.Predicate;
+public class PredicateExample {
+    public static void main(String args[]){
+        Predicate<Integer> pr = i -> i%10 == 0;
+        System.out.println(pr.test(10));
+        System.out.println(pr.test(15));
+    }
+}
+```
+**Example 1.2:** Predicate Functional Interface & Lambda Expression with Custom Object
+```java
+import java.util.function.Predicate;
+public class PredicateExample {
+    public static void main(String args[]){
+        //Custom Object to check age through lambda expression and predicate functional interface
+        Emp obj = new Emp(30);
+        Predicate<Emp> pe = e -> e.age > 40;
+        System.out.println(pe.test(new Emp(30)));
+    }
+}
+class Emp{
+    int age;
+    public Emp(int age){
+        this.age = age;
+    }
+    public int getAge() {
+        return age;
+    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+```
+
+**Example 1.3:** Predicate Joining with 'and()', 'or()', 'negate()'.
+```java
+import java.util.function.Predicate;
+public class PredicateJoiningExample {
+    public static void main(String args[]){
+        int s[] = {5,4,56,34,22,30};
+        Predicate<Integer> p1 = i -> i%2 == 0;
+        Predicate<Integer> p2 = i -> i > 10;
+
+        for(Integer i : s){
+            if(p1.and(p2).test(i))
+                System.out.println("Even and Greater than 10 "+ i);
+            if(p1.or(p2).test(i))
+                System.out.println("Even or Greater than 10 "+ i);
+            if(p1.negate().test(i))
+                System.out.println("Not even "+ i);
+        }
+    }
+}
+```
+
+### Function Functional Interface. Function mostly used when we pass a parameter + perform some operation + return value. In short, use this Function when we want to return such data types which is not boolean. For boolean, we will use Predicate.
+
+```java
+interface Function<T,R>
+{
+    public R apply(T t);
+}
+```
+
+**Example 2:** Function simple example. Input a number and return the addition of the same number
+```java
+import java.util.function.Function;
+public class FunctionExmaple {
+    public static void main(String args[]){
+        Function<Integer, Integer> fu = i -> i + i;
+        System.out.println("Addition: " +fu.apply(10));
+    }
+}
+```
+**Example 3:** Function to input integer value and return double
+```java
+import java.util.function.Function;
+public class FunctionExmaple {
+    public static void main(String args[]){
+        Function<Integer,Double> fu = i -> (50.0 / 100.0) * i;
+        System.out.println("Percentage: " + fu.apply(20));
+    }
+}
+```
+**Example 4:** Function to input Custom object and calculate bonus based on some condition and return the bonus.
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+public class FunctionCustomObject {
+    public static void main(String args[]){
+        List<AccEmp> list = new ArrayList<>();
+        list.add(new AccEmp("Suresh",30000,34));
+        list.add(new AccEmp("Anil",50000,40));
+        list.add(new AccEmp("Idhant",80000,50));
+        list.add(new AccEmp("Raj",25000,33));
+
+        Function<AccEmp, Double> fu = o -> {
+            if(o.salary > 40000 && o.age > 40){
+                return (40.0 / 100.0) * o.salary;
+            }
+            else{
+                return (30.0 / 100.0) * o.salary;
+            }
+        };
+        for(AccEmp ae : list){
+            System.out.println("Bonus of " + ae.name + " : " + fu.apply(ae));
+        }
+    }
+}
+class AccEmp{
+    double salary;
+    int age;
+    String name;
+    public AccEmp(String name, double salary, int age){
+        this.name = name;
+        this.salary = salary;
+        this.age = age;
+    }
+}
+```
+**Example 4.1:** Same above program by using Function & Predicate both.
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
+public class FunctionCustomObject {
+    public static void main(String args[]){
+        List<AccEmp> list = new ArrayList<>();
+        list.add(new AccEmp("Suresh",30000,34));
+        list.add(new AccEmp("Anil",50000,40));
+        list.add(new AccEmp("Idhant",80000,50));
+        list.add(new AccEmp("Raj",25000,33));
+
+        Predicate<AccEmp> pd = o -> o.salary > 40000 && o.age > 40;
+        Function<AccEmp, Double> fu = o -> {
+            if(pd.test(o)){
+                return (40.0 / 100.0) * o.salary;
+            }
+            else{
+                return (30.0 / 100.0) * o.salary;
+            }
+        };
+        for(AccEmp ae : list){
+            System.out.println("Bonus of " + ae.name + " : " + fu.apply(ae));
+        }
+    }
+}
+class AccEmp{
+    double salary;
+    int age;
+
+    String name;
+    public AccEmp(String name, double salary, int age){
+        this.name = name;
+        this.salary = salary;
+        this.age = age;
+    }
+}
+```
+
+### Function chaining, Two functions combined to perform complex operations. 
+#### Ex: 'f1.andThen(f2).apply(i)'. First f1 performs operation with i and then return value will be as input to f2 to perform another operation. 
+#### Ex: 'f1.compose(f2).apply(i)'. First f2 performs operation with i and then return value will be as input to f1 to perform another operation. 
+
+**Example 5:** Function chaining example showing 'andThen' & 'compose'.
+```java
+import java.util.function.Function;
+public class FunctionChaning {
+    public static void main(String args[]){
+        Function<Integer,Integer> f1 = i->2*i;
+        Function<Integer,Integer> f2 = i->i*i*i;
+        System.out.println(f1.andThen(f2).apply(3));
+        System.out.println(f1.compose(f2).apply(3));
+    }
+}
+```
+<div style="background-color: lightgrey;border: 1px solid green;padding: 5px;">
+output:<br/>
+216<br/>
+54
+</div>
+
+### Consumer Functional Interface always takes input and perform operation and does not return anything.
+```java
+interface Consumer<T>
+{
+    public void accept(T t);
+}
+```
+
+**Example 6:** Simple Consumer Functional Interface program.
+```java
+import java.util.function.Consumer;
+public class ConsumerFunctionalInterface {
+    public static void main(String args[]){
+        Consumer<String> con = s->System.out.println("Hello " + s);
+        con.accept("Java");
+    }
+}
+```
+
+**Example 7:** Custom Object with Consumer, Function & Predicate Functional Interfaces.
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+public class FunctionCustomObject {
+    public static void main(String args[]) {
+        List<AccEmp> list = new ArrayList<>();
+        list.add(new AccEmp("Suresh", 30000, 34));
+        list.add(new AccEmp("Anil", 50000, 40));
+        list.add(new AccEmp("Idhant", 80000, 50));
+        list.add(new AccEmp("Raj", 25000, 33));
+        
+        Predicate<AccEmp> pd = o -> o.salary > 40000 && o.age > 40;
+        Function<AccEmp, Double> fu = o -> {
+            if (pd.test(o)) {
+                return (40.0 / 100.0) * o.salary;
+            } else {
+                return (30.0 / 100.0) * o.salary;
+            }
+        };
+        Consumer<AccEmp> con = o -> System.out.println("Bonus of " + o.name + " : " + fu.apply(o));
+        for (AccEmp ae : list) {
+            con.accept(ae);
+        }
+    }
+}
+
+class AccEmp {
+    double salary;
+    int age;
+    String name;
+
+    public AccEmp(String name, double salary, int age) {
+        this.name = name;
+        this.salary = salary;
+        this.age = age;
+    }
+}
+```
+
+#### Consumer chaning with 'andThen' function.
+
+**Example 8:** Simple Consumer chaining eample.
+```java
+import java.util.function.Consumer;
+
+public class ConsumerChaining {
+    public static void main(String args[]){
+        Consumer<String> c1 = s->System.out.println("c1 " + s);
+        Consumer<String> c2 = s->System.out.println("c2 " + s);
+        Consumer<String> c3 = s->System.out.println("c3 " + s);
+        Consumer<String> c4 = c1.andThen(c2).andThen(c3);
+
+        c4.accept("Java");
+    }
+}
+```
+<div style="background-color: lightgrey;border: 1px solid green;padding: 5px;">
+output:<br/>
+c1 Java<br/>
+c2 Java<br/>
+c3 Java<br/>
+</div>
+
+
+### Supplier Functional Interface never takes any input parameters it always returns an Object.
+```java
+interface Supplier<R>
+{
+    public R get();
+}
+```
+
+**Example 9:** Simple Supplier Functional Interface example.
+```java
+import java.util.Date;
+import java.util.function.Supplier;
+
+public class SupplierFunctionalInterface {
+    public static void main(String args[]){
+        Supplier<Date> sup = ()->new Date();
+        System.out.println(sup.get());
+    }
+}
+```
+
+**Example 10:** Generates OTP through Supplier Functional Interface.
+```java
+import java.util.function.Supplier;
+public class SupplierToGeneratesOTP {
+    public static void main(String args[]){
+        Supplier<String> sup = () ->{
+            String otp = "";
+            for(int i=1;i<=6;i++){
+                otp += (int)(Math.random()*10);
+            }
+            return otp;
+        };
+        System.out.println(sup.get());
+    }
+}
+```
+
+### Accept Two input parameters Functional Interfaces.
+#### BiPredicate Functional Interfaces. Same like Predicate except it accept two arguments.
+```java
+interface BiPredicate<T1, T2>
+{
+    public boolean test(T1 t1, T2 t2);
+}
+```
+
+**Example 11:** Simple example of BiPredicate.
+```java
+import java.util.function.BiPredicate;
+public class BiPredicateFunctionalInterface {
+    public static void main(String args[]){
+
+        BiPredicate<Integer,Integer> bip = (a,b)-> (a*b) > 50;
+        System.out.println(bip.test(6,9));
+    }
+}
+```
+#### BiFunction Functional Interfaces. Same like Function except it accept two arguments.
+```java
+interface BiFunction<T,U,R>
+{
+    public R apply(T t,U u);
+}
+```
+
+**Example 12:** BiFunction example, it will take an integer and a double as a percentage to calculate percentage of an integer and return the double value.
+```java
+import java.util.function.BiFunction;
+public class BiFunctionFuncationlInterface {
+    public static void main(String args[]){
+        BiFunction<Integer,Double,Double> bif = (i,d) -> (d / 100) * i;
+        System.out.println(bif.apply(10,50.0));
+    }
+}
+```
+**Example 13:** BiFunction example to accept string and int as name and age respectively and return custom object.
+```java
+import java.util.ArrayList;
+import java.util.function.BiFunction;
+public class BiFunctionWithCustomObject {
+    public static void main(String args[]){
+        BiFunction<String,Integer, Emp1> bif = (s,i)-> new Emp1(s,i);
+        ArrayList<Emp1> ar = new ArrayList<>();
+        ar.add(bif.apply("Raj",40));
+        ar.add(bif.apply("Sunil",30));
+        ar.add(bif.apply("Avik",50));
+
+        System.out.println(ar);
+    }
+}
+
+class Emp1{
+    String name;
+    int age;
+    public Emp1(String name, int age){
+        this.name = name;
+        this.age = age;
+    }
+    @Override
+    public String toString() {
+        return "Emp1{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+```
+
+#### BiConsumer Functional Interfaces. Same like Consumer except it accept two arguments.
+
+**Example 14:** BiConsumer example, it will take two numbers integer and double and then print the sum.
+
+```java
+import java.util.function.BiConsumer;
+
+public class BiConsumerFunctionalInterface {
+    public static void main(String args[]){
+        BiConsumer<Integer,Double> bic = (i,d) -> System.out.println(i+d);
+        bic.accept(10,50.8);
+    }
+}
+```
