@@ -679,6 +679,14 @@ IntFunction<br/>
 IntConsumer<br/>
 ...
 
+**Child Interfaces of Function and BiFunction Functional Interface**
+
+UnaryOperator<br/>
+IntUnaryOperator<br/>
+BinaryOperator<br/>
+IntBinaryOperator<br/>
+...
+
 ### Predicate Functional Interface. Predicate mostly used when we check condition and return boolean.
 
 ```java
@@ -1104,3 +1112,200 @@ public class BiConsumerFunctionalInterface {
     }
 }
 ```
+
+### Predefined primitive data type Functional Interfaces.
+#### Why we need Primitive data type Functional Interfaces? Understand by below examples. 
+
+**Example 15:** Below example showing Predicate Functional Interface taking Integer value to checking even or odd.
+```java
+import java.util.function.Predicate;
+public class PredicateExample {
+    public static void main(String args[]){
+        Predicate<Integer> pr = i -> i%10 == 0;
+        System.out.println(pr.test(10));
+    }
+}
+```
+<p>Above example is taking an primitive int as an argument and converting it to wrapper class called Integer and then again it is converting into int primitive type to calculate. 
+This process is like: int --> Integer --> int means first autoboxing int to Integer and then auto unboxing from Integer to int. Java will do this 
+process everytime whenever we use wrapper class Integer and passing primitive int data type. This will impact performance. So, to overcome this 
+perfomance we can use Primitive version of Functional Interfaces.</p> 
+
+#### IntPredicate, DoublePredicate ... Functional Interfaces for Predicate.
+
+**Example 16:** Same above example showing in IntPredicate. This example will not do any autoboxing and auto unboxing.
+
+```java
+import java.util.function.IntPredicate;
+public class IntPredicateExample {
+    public static void main(String args[]){
+        IntPredicate ip = i-> i%10 == 0;
+        System.out.println(ip.test(10));
+    }
+}
+```
+
+#### IntFunction, ToLongFunction, IntToDoubleFunction, ToDoubleBiFunction ... Functional Interfaces for Function.
+
+**Example 17:** Example of IntFunction. Input will be primitive type but return will be Object.
+```java
+import java.util.function.IntFunction;
+public class IntFunctionExample {
+    public static void main(String args[]){
+        IntFunction<Double> intF = i -> i * 10.5;
+        System.out.println(intF.apply(2));
+    }
+}
+```
+
+**Example 18:** Example of IntToDoubleFunction. Same above example but input and return type both will be primitive type.
+```java
+import java.util.function.IntToDoubleFunction;
+public class IntToDoubleFunctionExample {
+    public static void main(String args[]){
+        IntToDoubleFunction ob = i -> i * 10.4;
+        System.out.println(ob.applyAsDouble(2));
+    }
+}
+```
+
+**Example 19:** Example of ToLongFunction. Input will be an Object but return will be primitive type.
+```java
+import java.util.function.ToLongFunction;
+public class ToLongFunctionExample {
+    public static void main(String args[]){
+        ToLongFunction<Integer> tlf = i -> i * 45l;
+        System.out.println(tlf.applyAsLong(2));
+    }
+}
+```
+
+**Example 20:** Example of ToDoubleBiFunction. Input two Objects and return primitive type.
+```java
+import java.util.function.ToDoubleBiFunction;
+public class ToDoubleBiFunctionExample {
+    public static void main(String args[]){
+        ToDoubleBiFunction<Integer,Integer> o = (a,b) -> a * b * 10.5;
+        System.out.println(o.applyAsDouble(2,3));
+    }
+}
+```
+
+#### IntConsumer, LongConsumer, ObjIntConsumer ... Functional Interfaces for Consumer.
+
+**Example 21** Example of IntConsumer. It will take primitive input and print the same.
+```java
+import java.util.function.IntConsumer;
+public class IntConsumerExample {
+    public static void main(String args[]){
+        IntConsumer ic = i -> System.out.println("Consume : " + i);
+        ic.accept(10);
+    }
+}
+```
+
+**Example 22** Example of ObjIntConsumer. It will take first parameter as Object and second as primitive type. Similar like 'Bi' class.
+```java
+import java.util.function.ObjIntConsumer;
+public class ObjIntConsumerExample {
+    public static void main(String args[]){
+        ObjIntConsumer<Double> o = (i,d) -> System.out.println(i*d);
+        o.accept(10.5,5);
+    }
+}
+```
+
+#### IntSupplier, BooleanSupplier, ... Functional Interfaces for Consumer.
+
+**Example 23** Example of IntSupplier. It will return int primitive type only.
+```java
+import java.util.function.IntSupplier;
+public class IntSupplierExample {
+    public static void main(String args[]){
+        IntSupplier is = ()-> 10 * 10;
+        System.out.println(is.getAsInt());
+    }
+}
+```
+
+**Example 24** Example of BooleanSupplier. It will return boolean primitive type only.
+```java
+import java.util.function.BooleanSupplier;
+public class BooleanSupplierExample {
+    public static void main(String args[]){
+        BooleanSupplier bs = ()-> 10 > 5;
+        System.out.println(bs.getAsBoolean());
+    }
+}
+```
+
+### UnaryOperator Interface, It is a child of Function Interface. If Function Interface is taking input as same type and returning the same type then we should go with UnaryOperator class.
+
+**Example 25** Example of UnaryOperator. It will take same input type and return type.
+```java
+import java.util.function.UnaryOperator;
+public class UnaryOperatorExample {
+    public static void main(String args[]){
+        UnaryOperator<Emp2> uo = e -> {
+            e.name = "Hello " + e.name;
+            return e;
+        };
+        Emp2 obj = uo.apply(new Emp2("Java"));
+        System.out.println(obj.name);
+    }
+}
+class Emp2{
+    String name;
+    public Emp2(String name){
+        this.name = name;
+    }
+}
+```
+
+#### IntUnaryOperator, DoubleUnaryOperator... . This will be used for primitive type only.
+
+**Example 26** Example of IntUnaryOperator. It will take int primitive type input and returns int primitive type only.
+```java
+import java.util.function.IntUnaryOperator;
+public class IntUnaryOperatorExample {
+    public static void main(String args[]){
+        IntUnaryOperator o = i -> i * i;
+        System.out.println(o.applyAsInt(2));
+    }
+}
+```
+
+### BinaryOperator<T> Interface, It is a child of BiFunction<T,T,T> Interface. Taking two same type argument and returning also same type.
+
+**Example 27** Example of BinaryOperator. It will take input of two same custom object and return same custom object. 
+```java
+import java.util.function.BinaryOperator;
+public class BinaryOperatorExample {
+    public static void main(String args[]){
+        BinaryOperator<Person> bo = (brother, sister) -> brother.age > sister.age ? brother : sister;
+        Person brother = new Person(35);
+        Person sister = new Person(30);
+        Person elder = bo.apply(brother,sister);
+        System.out.println("Elder's age is : " + elder.age);
+    }
+}
+class Person{
+    int age;
+    public Person(int age){
+        this.age = age;
+    }
+}
+```
+#### IntBinaryOperator, DoubleBinaryOperator... . This will be used for primitive type only.
+
+```java
+import java.util.function.IntBinaryOperator;
+public class IntBinaryOperatorExample {
+    public static void main(String args[]){
+        IntBinaryOperator o = (a,b) -> a * b;
+        System.out.println(o.applyAsInt(5,2));
+    }
+}
+```
+
+# Method and Constructor refrence by double colon ("::") operator.
