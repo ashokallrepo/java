@@ -2,7 +2,7 @@ Ref: Youtube for Blog in Google Search Engine- https://www.youtube.com/watch?v=R
 <br/>Ref: Youtube for Durga sir class -- https://www.youtube.com/watch?v=Tm2BpKlv1rU&list=PLd3UqWTnYXOlrKZWFTbgguqNRA_uVyeBl&index=1
 <br/>Ref: Youtube for Durga sir class (Streams) -- https://www.youtube.com/watch?v=5duxFiseLRE&t=240s
 
-<h1>Java 1.8 [concise code] </h1>
+<h1>Java 1.8 [concise code]</h1>
 
 
 
