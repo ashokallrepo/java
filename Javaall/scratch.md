@@ -1,6 +1,6 @@
 Ref: Youtube for Blog in Google Search Engine- https://www.youtube.com/watch?v=RLYxWOBA_Vw&t=506s
-Ref: Youtube for Durga sir class -- https://www.youtube.com/watch?v=Tm2BpKlv1rU&list=PLd3UqWTnYXOlrKZWFTbgguqNRA_uVyeBl&index=1
-
+<br/>Ref: Youtube for Durga sir class -- https://www.youtube.com/watch?v=Tm2BpKlv1rU&list=PLd3UqWTnYXOlrKZWFTbgguqNRA_uVyeBl&index=1
+<br/>Ref: Youtube for Durga sir class (Streams) -- https://www.youtube.com/watch?v=5duxFiseLRE&t=240s
 
 <h1>Java 1.8 [concise code]</h1>
 
@@ -1298,6 +1298,7 @@ class Person{
 ```
 #### IntBinaryOperator, DoubleBinaryOperator... . This will be used for primitive type only.
 
+**Example 28** Example of IntBinaryOperator. It will take input of two same primitive type and return same primitive type.  
 ```java
 import java.util.function.IntBinaryOperator;
 public class IntBinaryOperatorExample {
@@ -1308,4 +1309,196 @@ public class IntBinaryOperatorExample {
 }
 ```
 
-# Method and Constructor refrence by double colon ("::") operator.
+# Method and Constructor reference by double colon ("::") operator.
+
+#### Method and constructor references are alternatives to lambda expressions. If a method of a functional interface (FI) has already been implemented, we can reuse the same method as a reference using the double colon (::) operator. This approach enhances code reusability. If the implementation of the method is not available, you can use a lambda expression instead. One limitation is that we must adhere to the argument structure of the functional interface method, although specifying modifiers and return types is optional.
+
+**Example 29** Runnable example showing Lambda expression. 
+
+```java
+public class LambdaExpRunnable {
+    public static void main(String args[]){
+        Runnable r = () -> {
+            for(int i=1; i<=3; i++){
+                System.out.println(i + " Child Thread: ");
+            }
+        };
+        Thread th = new Thread(r);
+        th.start();
+        for(int i=1;i<=3;i++){
+            System.out.println(i + " Main Thread");
+        }
+    }
+}
+```
+**Example 30** The same example as in Example 29 will be shown using Method Reference. Instead of a Lambda expression, Method Reference will be used. This example will show static reference. 
+
+```java
+public class MethodReferenceOfRunnable {
+    public static void fun1(){
+        for(int i=1; i<=3; i++){
+            System.out.println(i + " Child Thread: ");
+        }
+    }
+    public static void main(String args[]){
+        Runnable r = MethodReferenceOfRunnable::fun1; //static reference
+        Thread th = new Thread(r);
+        th.start();
+        for(int i=1;i<=3;i++){
+            System.out.println(i + " Main Thread");
+        }
+    }
+}
+```
+
+**Example 31** Similar to Example 30, but showing with Instance reference.
+
+```java
+public class MethodReferenceOfRunnableObjectRef {
+    public  void fun1(){
+        for(int i=1; i<=3; i++){
+            System.out.println(i + " Child Thread: ");
+        }
+    }
+    public static void main(String args[]){
+        MethodReferenceOfRunnableObjectRef obj = new MethodReferenceOfRunnableObjectRef();
+        Runnable r = obj::fun1; //instance reference
+        Thread th = new Thread(r);
+        th.start();
+        for(int i=1;i<=3;i++){
+            System.out.println(i + " Main Thread");
+        }
+    }
+}
+```
+
+**Example 32** Method references follow the argument structure of the Functional Interface but do not require matching modifiers or return types. In this example Functional Interface method is 'public void run()' of Runnable FI.
+
+```java
+public class MethodReferenceOfRunnableObjectRef {
+    private  int fun1(){
+        for(int i=1; i<=3; i++){
+            System.out.println(i + " Child Thread: ");
+        }
+        return 10;
+    }
+    public static void main(String args[]){
+        MethodReferenceOfRunnableObjectRef obj = new MethodReferenceOfRunnableObjectRef();
+        Runnable r = obj::fun1; //METHOD IS RETURNING int BUT run() METHOD OF RUNNABLE DOES NOT HAVE ANY RETURN TYPE. THIS IS CORRECT BECAUSE ITS ARGUMENT IS SIMILAR TO run() METHOD.  
+        Thread th = new Thread(r);
+        th.start();
+        for(int i=1;i<=3;i++){
+            System.out.println(i + " Main Thread");
+        }
+    }
+}
+
+```
+**Example 33** Similar to Example 32, but demonstrating an incorrect argument type, which will result in a compiler error.
+
+```java
+public class MethodReferenceOfRunnableObjectRef {
+    public  void fun1(int x){
+        for(int i=1; i<=3; i++){
+            System.out.println(i + " Child Thread: ");
+        }
+        return 10;
+    }
+    public static void main(String args[]){
+        MethodReferenceOfRunnableObjectRef obj = new MethodReferenceOfRunnableObjectRef();
+        Runnable r = obj::fun1; //There will be a compiler error because it does not follow the argument type of the run() method of Runnable FI"  
+        Thread th = new Thread(r);
+        th.start();
+        for(int i=1;i<=3;i++){
+            System.out.println(i + " Main Thread");
+        }
+    }
+}
+```
+
+**Example 34** Simple custom define FI with static Method reference example.
+
+```java
+public class MethodRefCustomFI {
+    public static void sum(int x, int y){
+        System.out.println("Sum: " + (x+y));
+    }
+    public static void main(String args[]){
+        ABCInf abi = MethodRefCustomFI::sum;
+        abi.add(10,20);
+    }
+}
+
+interface ABCInf{
+    public void add(int x, int y);
+}
+```
+
+
+#### Constructor references : Constructor references are particularly useful in scenarios where you want to instantiate objects based on functional interfaces or lambda expressions. When we have functional interfaces (such as Supplier, Function, BiFunction, etc.) that need to create instances of classes, constructor references provide a concise way to instantiate objects.
+
+**Example 35** Below is an example demonstrating the use of the Function functional interface using a lambda expression to instantiate a custom class, and the same using constructor reference.
+
+```java
+import java.util.function.Function;
+public class ConstructorRefWithFunctionFI {
+    public static void main(String args[]){
+        Function<String,Sample> fi1 = (a) -> new Sample(a); //INSTANTIATE WITH LAMBDA EXPRESSION
+        Sample obj1 = fi1.apply("Hello");
+        obj1.show();
+
+        Function<String,Sample> fi3 = Sample::new; //INSTANTIATE WITH CONSTRUCTOR REFERENCE
+        Sample obj2 = fi3.apply("World");
+        obj2.show();
+    }
+}
+
+class Sample{
+    String name;
+
+    Sample(String name){
+        this.name = name;
+    }
+    public void show(){
+        System.out.println("Name: " + name);
+    }
+}
+```
+
+**Example 36** Below is an example of creating a custom FI with multiple parameters to instantiate a custom class.
+
+```java
+interface ObjectCreateIntf<R,A,B,C>{
+    R getObject(A a, B b, C c);
+}
+class SampleClz{
+    String name;
+    int age;
+    double salary;
+    
+    SampleClz(String name, int age, double salary){
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+    }
+
+    @Override
+    public String toString() {
+        return "SampleClz{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", salary=" + salary +
+                '}';
+    }
+}
+public class ConstructorRefCustomFIMultipleParam {
+    public static void main(String args[]){
+        ObjectCreateIntf<SampleClz, String,Integer, Double> oi = SampleClz::new;
+        SampleClz sobj1 = oi.getObject("Java", 38, 34999.00);
+        System.out.println(sobj1);
+        SampleClz sobj2 = oi.getObject("C++", 45, 58599.09);
+        System.out.println(sobj2);
+    }
+}
+```
+
